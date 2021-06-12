@@ -1,10 +1,12 @@
 import express from "express";
-import Bundler from "parcel-bundler";
+import path from "path";
 
 const app = express();
 
-const clientPath = __dirname + "/../client/game.html";
-const bundler = new Bundler(clientPath, {});
-app.use(bundler.middleware());
+app.use(express.static(path.join(__dirname, "../client")))
+
+app.get("/", (_req: any, res: any) => {
+  res.sendFile(path.join(__dirname, "../client/game.html"))
+})
 
 app.listen(process.env.PORT || 3000);
