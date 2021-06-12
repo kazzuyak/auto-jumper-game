@@ -4,7 +4,7 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "start": "node dist/server/server.js",
+    "start": "node --max_old_space_size=2560 dist/server/server.js",
     "postinstall": "tsc && cp prod.html dist/client/game.html",
     "dev": "parcel client/game.html"
   },
