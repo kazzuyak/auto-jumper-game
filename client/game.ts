@@ -9,6 +9,9 @@ export default new Game({
     mode: Scale.FIT,
     autoCenter: Scale.CENTER_BOTH,
   },
+  input: {
+    activePointers: 2
+  },
   scene: [GameWorld, GameOver],
   physics: {
     default: "arcade",

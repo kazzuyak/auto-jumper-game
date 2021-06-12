@@ -70,11 +70,44 @@ export class GameWorld extends Scene {
 
     let playerVelocity = 0;
 
-    if ((this.cursors.left.isDown || this.cursors.A.isDown) && !touchingDown) {
+    let isPressingLeft = false;
+    let isPressingRight = false;
+
+    const pointer1 = this.input.pointer1;
+
+    if (pointer1.isDown) {
+      if (pointer1.x >= this.scale.width / 2) {
+        isPressingRight = true;
+      }
+
+      if (pointer1.x < this.scale.width / 2) {
+        isPressingLeft = true;
+      }
+    }
+
+    const pointer2 = this.input.pointer2;
+
+    if (pointer2.isDown) {
+      if (pointer2.x >= this.scale.width / 2) {
+        isPressingRight = true;
+      }
+
+      if (pointer2.x < this.scale.width / 2) {
+        isPressingLeft = true;
+      }
+    }
+
+    if (
+      (this.cursors.left.isDown || this.cursors.A.isDown || isPressingLeft) &&
+      !touchingDown
+    ) {
       playerVelocity -= 300;
     }
 
-    if ((this.cursors.right.isDown || this.cursors.D.isDown) && !touchingDown) {
+    if (
+      (this.cursors.right.isDown || this.cursors.D.isDown || isPressingRight) &&
+      !touchingDown
+    ) {
       playerVelocity += 300;
     }
 
