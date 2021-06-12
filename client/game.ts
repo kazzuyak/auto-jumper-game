@@ -1,5 +1,5 @@
 import { AUTO, Game, Scale } from "phaser";
-import GameOver from "./scenes/game-over";
+import { GameOver } from "./scenes/game-over";
 import { GameWorld } from "./scenes/game-world";
 
 new Game({

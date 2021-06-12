@@ -8,6 +8,9 @@
     "postinstall": "tsc && cp prod.html dist/client/game.html",
     "dev": "parcel client/game.html"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kazzuyak/auto-jumper-game-test.git"

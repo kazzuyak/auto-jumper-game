@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-export default class GameOver extends Scene {
+export class GameOver extends Scene {
   constructor() {
     super("game-over");
   }
