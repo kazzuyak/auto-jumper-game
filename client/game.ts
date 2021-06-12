@@ -9,7 +9,7 @@ new Game({
     mode: Scale.FIT,
     autoCenter: Scale.CENTER_BOTH,
   },
-  scene: [GameWorld, GameOver],
+  scene: [],
   physics: {
     default: "arcade",
     arcade: {
