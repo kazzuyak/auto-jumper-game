@@ -4,7 +4,7 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "start": "node --max_old_space_size=2560 dist/server/server.js",
+    "start": "node dist/server/server.js",
     "dev": "parcel client/game.html",
     "build": "npm-run-all tsc assets parcel",
     "assets": "cp prod.html dist/client/game.html",
