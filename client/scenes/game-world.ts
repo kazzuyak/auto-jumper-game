@@ -58,7 +58,7 @@ export class GameWorld extends Scene {
       .down;
 
     if (touchingDown) {
-      (this.player.body as Physics.Arcade.Body).setVelocityY(-250);
+      (this.player.body as Physics.Arcade.Body).setVelocityY(-600);
     }
 
     let playerVelocity = 0;
