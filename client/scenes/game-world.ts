@@ -1,11 +1,18 @@
-import { Physics, Scene, Types } from "phaser";
+import { Input, Physics, Scene, Types } from "phaser";
 import { Jumper } from "../entities/jumper";
 import { Platform } from "../entities/platform";
+
+interface ICursors {
+  left: Input.Keyboard.Key;
+  right: Input.Keyboard.Key;
+  A: Input.Keyboard.Key;
+  D: Input.Keyboard.Key;
+}
 
 export class GameWorld extends Scene {
   private platforms!: Physics.Arcade.StaticGroup;
   private player!: Jumper;
-  private cursors!: Types.Input.Keyboard.CursorKeys;
+  private cursors!: ICursors;
 
   constructor() {
     super("game");
@@ -35,7 +42,7 @@ export class GameWorld extends Scene {
     (this.player.body as Physics.Arcade.Body).checkCollision.left = false;
     (this.player.body as Physics.Arcade.Body).checkCollision.right = false;
     (this.player.body as Physics.Arcade.Body).checkCollision.up = false;
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys("left,right,A,D") as ICursors;
 
     this.cameras.main.startFollow(this.player, false, 0, 1);
     this.player.x = firstPlatform.x + 100;
@@ -58,16 +65,16 @@ export class GameWorld extends Scene {
       .down;
 
     if (touchingDown) {
-      (this.player.body as Physics.Arcade.Body).setVelocityY(-600);
+      (this.player.body as Physics.Arcade.Body).setVelocityY(-560);
     }
 
     let playerVelocity = 0;
 
-    if (this.cursors.left.isDown && !touchingDown) {
+    if ((this.cursors.left.isDown || this.cursors.A.isDown) && !touchingDown) {
       playerVelocity -= 300;
     }
 
-    if (this.cursors.right.isDown && !touchingDown) {
+    if ((this.cursors.right.isDown || this.cursors.D.isDown) && !touchingDown) {
       playerVelocity += 300;
     }
 
