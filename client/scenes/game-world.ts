@@ -2,6 +2,7 @@ import { Input, Physics, Scene } from "phaser";
 import { Jumper } from "../entities/jumper";
 import { Platform } from "../entities/platform";
 import { ScoreCounter } from "../entities/score-counter";
+import { ImageEnum } from "../enums/ImageEnum";
 
 interface ICursors {
   left: Input.Keyboard.Key;
@@ -20,7 +21,14 @@ export class GameWorld extends Scene {
     super("game");
   }
 
-  public preload() {}
+  public preload() {
+    this.load.image(ImageEnum.JumperJumping, require("../assets/bunny1_jump.png"));
+    this.load.image(
+      ImageEnum.JumperStanding,
+      require("../assets/bunny1_ready.png"),
+    );
+    this.load.image(ImageEnum.JumperWalking, require("../assets/bunny1_walk1.png"));
+  }
 
   public create() {
     this.platforms = this.physics.add.staticGroup();
@@ -45,13 +53,10 @@ export class GameWorld extends Scene {
       this.platforms.getLength() - 1
     ].body as Physics.Arcade.Body;
 
-    const ballRadius = this.scale.width / 55;
-
     this.player = new Jumper(
       this,
       this.scale.width / 2,
-      firstPlatform.position.y - ballRadius - firstPlatform.height,
-      ballRadius,
+      firstPlatform.position.y - firstPlatform.height - this.scale.height * 0.1,
     );
 
     this.physics.add.existing(this.player);
@@ -94,6 +99,15 @@ export class GameWorld extends Scene {
 
     if (touchingDown) {
       this.player.body.setVelocityY(-this.scale.height * 0.7);
+      this.player.setTexture(ImageEnum.JumperJumping);
+    }
+
+    const playerVelocityY = this.player.body.velocity.y;
+    if (
+      playerVelocityY > 0 &&
+      this.player.texture.key !== ImageEnum.JumperStanding
+    ) {
+      this.player.setTexture(ImageEnum.JumperStanding);
     }
 
     let playerVelocity = 0;
@@ -137,6 +151,14 @@ export class GameWorld extends Scene {
       !touchingDown
     ) {
       playerVelocity += this.scale.width * 0.34;
+    }
+
+    if (playerVelocity > 0) {
+      this.player.setTexture(ImageEnum.JumperWalking).setFlipX(false);
+    }
+
+    if (playerVelocity < 0) {
+      this.player.setTexture(ImageEnum.JumperWalking).setFlipX(true);
     }
 
     this.player.body.setVelocityX(playerVelocity);
