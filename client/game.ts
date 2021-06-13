@@ -6,8 +6,8 @@ export default new Game({
   type: AUTO,
   backgroundColor: "#125555",
   scale: {
-    mode: Scale.FIT,
-    autoCenter: Scale.CENTER_BOTH,
+    mode: Scale.RESIZE,
+    autoCenter: Scale.CENTER_BOTH
   },
   input: {
     activePointers: 2
@@ -16,9 +16,6 @@ export default new Game({
   physics: {
     default: "arcade",
     arcade: {
-      gravity: {
-        y: 1000,
-      },
       debug: false,
     },
   },
