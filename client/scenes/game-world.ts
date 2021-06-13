@@ -116,14 +116,14 @@ export class GameWorld extends Scene {
       (this.cursors.left.isDown || this.cursors.A.isDown || isPressingLeft) &&
       !touchingDown
     ) {
-      playerVelocity -= this.scale.width * 0.4;
+      playerVelocity -= this.scale.width * 0.34;
     }
 
     if (
       (this.cursors.right.isDown || this.cursors.D.isDown || isPressingRight) &&
       !touchingDown
     ) {
-      playerVelocity += this.scale.width * 0.4;
+      playerVelocity += this.scale.width * 0.34;
     }
 
     this.player.body.setVelocityX(playerVelocity);
