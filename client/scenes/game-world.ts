@@ -1,6 +1,7 @@
 import { Input, Physics, Scene } from "phaser";
 import { Jumper } from "../entities/jumper";
 import { Platform } from "../entities/platform";
+import { ScoreCounter } from "../entities/score-counter";
 
 interface ICursors {
   left: Input.Keyboard.Key;
@@ -13,6 +14,7 @@ export class GameWorld extends Scene {
   private platforms!: Physics.Arcade.StaticGroup;
   private player!: Jumper;
   private cursors!: ICursors;
+  private scoreCounter!: ScoreCounter;
 
   constructor() {
     super("game");
@@ -65,6 +67,16 @@ export class GameWorld extends Scene {
     this.player.x = firstPlatform.position.x + firstPlatform.halfWidth;
     this.physics.world.gravity.y = this.scale.height;
     this.input.addPointer(1);
+
+    this.scoreCounter = new ScoreCounter(
+      this,
+      this.scale.width * 0.5,
+      this.scale.height * 0.05,
+      this.scale.height * 0.025,
+    )
+      .setScrollFactor(0)
+      .setOrigin(0.5);
+    this.add.existing(this.scoreCounter);
   }
 
   public update() {
@@ -74,6 +86,7 @@ export class GameWorld extends Scene {
 
       if (childBody.y >= scrollY + this.scale.height) {
         childBody.reset(this.getRandomPlatformX(childBody.width), scrollY);
+        this.scoreCounter.scoreUp();
       }
     });
 
@@ -135,7 +148,7 @@ export class GameWorld extends Scene {
       this.player.y >
       bottomPlatform.body.position.y + this.scale.height / 5
     ) {
-      this.scene.start("game-over");
+      this.scene.start("game-over", { score: this.scoreCounter.score });
     }
   }
 
