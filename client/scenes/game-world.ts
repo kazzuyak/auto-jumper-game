@@ -46,6 +46,7 @@ export class GameWorld extends Scene {
 
     this.cameras.main.startFollow(this.player, false, 0, 1);
     this.player.x = firstPlatform.x + 100;
+    this.input.addPointer(1);
   }
 
   update() {
