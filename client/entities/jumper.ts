@@ -1,6 +1,8 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Physics, Scene } from "phaser";
 
 export class Jumper extends GameObjects.Arc {
+  public body!: Physics.Arcade.Body;
+
   constructor(scene: Scene, x: number, y: number) {
     super(
       scene,

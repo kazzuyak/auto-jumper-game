@@ -39,9 +39,9 @@ export class GameWorld extends Scene {
     this.add.existing(this.player);
 
     this.physics.add.collider(this.platforms, this.player);
-    (this.player.body as Physics.Arcade.Body).checkCollision.left = false;
-    (this.player.body as Physics.Arcade.Body).checkCollision.right = false;
-    (this.player.body as Physics.Arcade.Body).checkCollision.up = false;
+    this.player.body.checkCollision.left = false;
+    this.player.body.checkCollision.right = false;
+    this.player.body.checkCollision.up = false;
     this.cursors = this.input.keyboard.addKeys("left,right,A,D") as ICursors;
 
     this.cameras.main.startFollow(this.player, false, 0, 1);
@@ -50,22 +50,18 @@ export class GameWorld extends Scene {
 
   update() {
     this.platforms.children.iterate((child) => {
-      const position = child.body.position;
+      const childBody = child.body as Physics.Arcade.Body;
       const scrollY = this.cameras.main.scrollY;
 
-      if (position.y >= scrollY + 700) {
-        (child.body as Physics.Arcade.Body).reset(
-          position.x + (child.body as Physics.Arcade.Body).halfWidth,
-          scrollY,
-        );
+      if (childBody.y >= scrollY + 700) {
+        childBody.reset(childBody.x + childBody.halfWidth, scrollY);
       }
     });
 
-    const touchingDown = (this.player.body as Physics.Arcade.Body).touching
-      .down;
+    const touchingDown = this.player.body.touching.down;
 
     if (touchingDown) {
-      (this.player.body as Physics.Arcade.Body).setVelocityY(-560);
+      this.player.body.setVelocityY(-560);
     }
 
     let playerVelocity = 0;
@@ -111,7 +107,7 @@ export class GameWorld extends Scene {
       playerVelocity += 300;
     }
 
-    (this.player.body as Physics.Arcade.Body).setVelocityX(playerVelocity);
+    this.player.body.setVelocityX(playerVelocity);
 
     this.horizontalWrap(this.player);
 
