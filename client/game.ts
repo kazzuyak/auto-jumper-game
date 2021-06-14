@@ -6,8 +6,7 @@ export default new Game({
   type: AUTO,
   backgroundColor: "#125555",
   scale: {
-    mode: Scale.RESIZE,
-    autoCenter: Scale.CENTER_BOTH
+    mode: Scale.RESIZE
   },
   input: {
     activePointers: 2

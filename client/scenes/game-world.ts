@@ -22,12 +22,18 @@ export class GameWorld extends Scene {
   }
 
   public preload() {
-    this.load.image(ImageEnum.JumperJumping, require("../assets/bunny1_jump.png"));
+    this.load.image(
+      ImageEnum.JumperJumping,
+      require("../assets/bunny1_jump.png"),
+    );
     this.load.image(
       ImageEnum.JumperStanding,
       require("../assets/bunny1_ready.png"),
     );
-    this.load.image(ImageEnum.JumperWalking, require("../assets/bunny1_walk1.png"));
+    this.load.image(
+      ImageEnum.JumperWalking,
+      require("../assets/bunny1_walk1.png"),
+    );
   }
 
   public create() {
@@ -102,63 +108,29 @@ export class GameWorld extends Scene {
       this.player.setTexture(ImageEnum.JumperJumping);
     }
 
-    const playerVelocityY = this.player.body.velocity.y;
     if (
-      playerVelocityY > 0 &&
+      this.player.body.velocity.y > 0 &&
       this.player.texture.key !== ImageEnum.JumperStanding
     ) {
       this.player.setTexture(ImageEnum.JumperStanding);
     }
 
+    const playerInput = this.getPlayerInput();
+
     let playerVelocity = 0;
 
-    let isPressingLeft = false;
-    let isPressingRight = false;
-
-    const pointer1 = this.input.pointer1;
-
-    if (pointer1.isDown) {
-      if (pointer1.x >= this.scale.width / 2) {
-        isPressingRight = true;
-      }
-
-      if (pointer1.x < this.scale.width / 2) {
-        isPressingLeft = true;
-      }
-    }
-
-    const pointer2 = this.input.pointer2;
-
-    if (pointer2.isDown) {
-      if (pointer2.x >= this.scale.width / 2) {
-        isPressingRight = true;
-      }
-
-      if (pointer2.x < this.scale.width / 2) {
-        isPressingLeft = true;
-      }
-    }
-
-    if (
-      (this.cursors.left.isDown || this.cursors.A.isDown || isPressingLeft) &&
-      !touchingDown
-    ) {
+    if (playerInput.left && !touchingDown) {
       playerVelocity -= this.scale.width * 0.34;
     }
 
-    if (
-      (this.cursors.right.isDown || this.cursors.D.isDown || isPressingRight) &&
-      !touchingDown
-    ) {
+    if (playerInput.right && !touchingDown) {
       playerVelocity += this.scale.width * 0.34;
     }
 
-    if (playerVelocity > 0) {
-      this.player.setTexture(ImageEnum.JumperWalking).setFlipX(false);
-    }
+    if (playerVelocity !== 0) {
+      const fliX = playerVelocity > 0 ? false : true;
 
-    if (playerVelocity < 0) {
-      this.player.setTexture(ImageEnum.JumperWalking).setFlipX(true);
+      this.player.setTexture(ImageEnum.JumperWalking).setFlipX(fliX);
     }
 
     this.player.body.setVelocityX(playerVelocity);
@@ -172,6 +144,37 @@ export class GameWorld extends Scene {
     ) {
       this.scene.start("game-over", { score: this.scoreCounter.score });
     }
+  }
+
+  private getPlayerInput(): { left: boolean; right: boolean } {
+    let isPressingLeft = false;
+    let isPressingRight = false;
+
+    const pointer1 = this.input.pointer1;
+    const pointer2 = this.input.pointer2;
+
+    if (
+      (pointer1.isDown && pointer1.x >= this.scale.width / 2) ||
+      (pointer2.isDown && pointer2.x >= this.scale.width / 2) ||
+      this.cursors.right.isDown ||
+      this.cursors.D.isDown
+    ) {
+      isPressingRight = true;
+    }
+
+    if (
+      (pointer1.isDown && pointer1.x < this.scale.width / 2) ||
+      (pointer2.isDown && pointer2.x < this.scale.width / 2) ||
+      this.cursors.left.isDown ||
+      this.cursors.A.isDown
+    ) {
+      isPressingLeft = true;
+    }
+
+    return {
+      left: isPressingLeft,
+      right: isPressingRight,
+    };
   }
 
   private findBottomMostPlatform() {
