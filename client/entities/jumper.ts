@@ -68,12 +68,18 @@ export class Jumper extends GameObjects.Sprite {
   }
 
   private horizontalWrap() {
-    const halfWidth = this.displayWidth * 0.5;
-    const gameWidth = this.scene.scale.width;
-    if (this.x < -halfWidth) {
-      this.x = gameWidth + halfWidth;
-    } else if (this.x > gameWidth + halfWidth) {
-      this.x = -halfWidth;
+    const jumperHalfWidth = this.displayWidth * 0.5;
+
+    const endingX =
+      this.customScale.extraHalfX + this.customScale.safeSize + jumperHalfWidth;
+    const startingX = this.customScale.extraHalfX - jumperHalfWidth;
+
+    if (this.x < startingX) {
+      this.x = endingX;
+    }
+
+    if (this.x > endingX) {
+      this.x = startingX;
     }
   }
 
