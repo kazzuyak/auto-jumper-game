@@ -67,7 +67,7 @@ export class GameWorld extends Scene {
       this,
       this.scale.width * 0.5,
       this.scale.height * 0.05,
-      this.scale.height * 0.025,
+      this.customScale.safeSize * 0.04,
     )
       .setScrollFactor(0)
       .setOrigin(0.5);
