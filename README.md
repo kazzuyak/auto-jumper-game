@@ -8,7 +8,7 @@ This game was created to test out phaser.
 
 ### Try the game
 
-herokuapp
+https://infinite-jumper.herokuapp.com/
 
 ## Features
 
