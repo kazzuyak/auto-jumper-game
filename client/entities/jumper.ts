@@ -14,7 +14,6 @@ export class Jumper extends GameObjects.Sprite {
 
   constructor(scene: Scene, x: number, y: number) {
     super(scene, x, y, ImageEnum.JumperJumping);
-    this.scale = 0.5;
 
     scene.physics.add.existing(this);
     scene.add.existing(this);
@@ -27,6 +26,8 @@ export class Jumper extends GameObjects.Sprite {
     ) as ICursors;
 
     this.customScale = new CustomScaleManager(scene.scale);
+
+    this.scale = this.customScale.safeSize * 0.0005;
   }
 
   public static preLoad(scene: Scene) {
@@ -53,7 +54,7 @@ export class Jumper extends GameObjects.Sprite {
 
   private jumpIfTouchingDown() {
     if (this.body.touching.down) {
-      this.body.setVelocityY(-this.scene.scale.height * 0.7);
+      this.body.setVelocityY(-this.customScale.safeSize * 0.77);
       this.setTexture(ImageEnum.JumperJumping);
     }
   }

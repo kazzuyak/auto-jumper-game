@@ -23,11 +23,15 @@ export class GameWorld extends Scene {
 
     this.platforms = this.physics.add.staticGroup();
 
-    for (let i = 0; i < 5; ++i) {
-      const platformWidth = this.customScale.safeSize / 5;
+    const platformDistanceY = this.customScale.safeSize * 0.25;
+
+    const startingPlatforms = Math.ceil(this.scale.height / platformDistanceY);
+
+    for (let i = 0; i < startingPlatforms; i++) {
+      const platformWidth = this.customScale.safeSize * 0.2;
 
       const x = this.getRandomPlatformX(platformWidth);
-      const y = (this.scale.height / 5) * i;
+      const y = platformDistanceY * i;
 
       const platform = new Platform(
         this,
@@ -46,14 +50,17 @@ export class GameWorld extends Scene {
     this.player = new Jumper(
       this,
       this.scale.width / 2,
-      firstPlatform.position.y - firstPlatform.height - this.scale.height * 0.1,
+      firstPlatform.position.y -
+        firstPlatform.height -
+        this.customScale.safeSize * 0.1,
     );
 
     this.physics.add.collider(this.platforms, this.player);
 
     this.cameras.main.startFollow(this.player, false, 0, 1);
     this.player.x = firstPlatform.position.x + firstPlatform.halfWidth;
-    this.physics.world.gravity.y = this.scale.height;
+    this.physics.world.gravity.y = this.customScale.safeSize;
+
     this.input.addPointer(1);
 
     this.scoreCounter = new ScoreCounter(
@@ -107,7 +114,9 @@ export class GameWorld extends Scene {
   private getRandomPlatformX(platformWidth: number) {
     return Phaser.Math.Between(
       this.customScale.extraHalfX + platformWidth / 2,
-      this.customScale.extraHalfX + this.customScale.safeSize - platformWidth / 2,
+      this.customScale.extraHalfX +
+        this.customScale.safeSize -
+        platformWidth / 2,
     );
   }
 }
