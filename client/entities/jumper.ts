@@ -1,5 +1,6 @@
 import { GameObjects, Input, Physics, Scene } from "phaser";
 import { ImageEnum } from "../enums/ImageEnum";
+import { CustomScaleManager } from "./custom-scale-manager";
 interface ICursors {
   left: Input.Keyboard.Key;
   right: Input.Keyboard.Key;
@@ -9,6 +10,7 @@ interface ICursors {
 export class Jumper extends GameObjects.Sprite {
   public body!: Physics.Arcade.Body;
   private cursors!: ICursors;
+  private customScale: CustomScaleManager;
 
   constructor(scene: Scene, x: number, y: number) {
     super(scene, x, y, ImageEnum.JumperJumping);
@@ -23,6 +25,8 @@ export class Jumper extends GameObjects.Sprite {
     this.cursors = this.scene.input.keyboard.addKeys(
       "left,right,A,D",
     ) as ICursors;
+
+    this.customScale = new CustomScaleManager(scene.scale);
   }
 
   public static preLoad(scene: Scene) {
@@ -81,11 +85,11 @@ export class Jumper extends GameObjects.Sprite {
     let playerVelocity = 0;
 
     if (playerInput.left && !touchingDown) {
-      playerVelocity -= this.scene.scale.width * 0.34;
+      playerVelocity -= this.customScale.safeSize * 0.34;
     }
 
     if (playerInput.right && !touchingDown) {
-      playerVelocity += this.scene.scale.width * 0.34;
+      playerVelocity += this.customScale.safeSize * 0.34;
     }
 
     if (playerVelocity !== 0) {

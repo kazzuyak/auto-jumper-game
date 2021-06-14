@@ -1,4 +1,5 @@
 import { Physics, Scene } from "phaser";
+import { CustomScaleManager } from "../entities/custom-scale-manager";
 import { Jumper } from "../entities/jumper";
 import { Platform } from "../entities/platform";
 import { ScoreCounter } from "../entities/score-counter";
@@ -7,6 +8,7 @@ export class GameWorld extends Scene {
   private platforms!: Physics.Arcade.StaticGroup;
   private player!: Jumper;
   private scoreCounter!: ScoreCounter;
+  private customScale!: CustomScaleManager;
 
   constructor() {
     super("game");
@@ -17,10 +19,12 @@ export class GameWorld extends Scene {
   }
 
   public create() {
+    this.customScale = new CustomScaleManager(this.scale);
+
     this.platforms = this.physics.add.staticGroup();
 
     for (let i = 0; i < 5; ++i) {
-      const platformWidth = this.scale.width / 5;
+      const platformWidth = this.customScale.safeSize / 5;
 
       const x = this.getRandomPlatformX(platformWidth);
       const y = (this.scale.height / 5) * i;
@@ -30,7 +34,7 @@ export class GameWorld extends Scene {
         x,
         y,
         platformWidth,
-        this.scale.height / 100,
+        this.customScale.safeSize / 100,
       );
       this.platforms.add(platform, true);
     }
@@ -102,8 +106,8 @@ export class GameWorld extends Scene {
 
   private getRandomPlatformX(platformWidth: number) {
     return Phaser.Math.Between(
-      platformWidth / 2,
-      this.scale.width - platformWidth / 2,
+      this.customScale.extraHalfX + platformWidth / 2,
+      this.customScale.extraHalfX + this.customScale.safeSize - platformWidth / 2,
     );
   }
 }
