@@ -1,5 +1,6 @@
 export enum ImageEnum {
   JumperJumping = "JumperJumping",
   JumperStanding = "JumperStanding",
-  JumperWalking = "JumperWalking"
+  JumperWalking = "JumperWalking",
+  Wall = "Wall",
 }
