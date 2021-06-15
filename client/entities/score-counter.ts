@@ -9,6 +9,9 @@ export class ScoreCounter extends GameObjects.Text {
     public score: number = 0,
   ) {
     super(scene, x, y, `Score: ${score}`, { fontSize: `${fontSize}px` });
+    scene.add.existing(this);
+    this.setScrollFactor(0);
+    this.setOrigin(0.5);
   }
 
   public updateScore(score: number) {

@@ -19,15 +19,13 @@ export class GameOver extends Scene {
       })
       .setOrigin(0.5);
 
-    const scoreCounter = new ScoreCounter(
+    new ScoreCounter(
       this,
       this.scale.width * 0.5,
       this.scale.height * 0.4,
       customScale.safeSize * 0.1,
       data.score,
     ).setOrigin(0.5);
-
-    this.add.existing(scoreCounter);
 
     this.input.keyboard.once("keydown-SPACE", () => {
       this.scene.start("game");

@@ -1,7 +1,6 @@
 import { Physics, Scene } from "phaser";
 import { CustomScaleManager } from "../entities/custom-scale-manager";
 import { Jumper } from "../entities/jumper";
-import { Platform } from "../entities/platform";
 import { PlatformManager } from "../entities/platform-manager";
 import { ScoreCounter } from "../entities/score-counter";
 
@@ -49,10 +48,7 @@ export class GameWorld extends Scene {
       this.scale.width * 0.5,
       this.scale.height * 0.05,
       this.customScale.safeSize * 0.04,
-    )
-      .setScrollFactor(0)
-      .setOrigin(0.5);
-    this.add.existing(this.scoreCounter);
+    );
   }
 
   public update() {
