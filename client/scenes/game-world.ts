@@ -2,10 +2,11 @@ import { Physics, Scene } from "phaser";
 import { CustomScaleManager } from "../entities/custom-scale-manager";
 import { Jumper } from "../entities/jumper";
 import { Platform } from "../entities/platform";
+import { PlatformManager } from "../entities/platform-manager";
 import { ScoreCounter } from "../entities/score-counter";
 
 export class GameWorld extends Scene {
-  private platforms!: Physics.Arcade.StaticGroup;
+  private platformManager!: PlatformManager;
   private player!: Jumper;
   private scoreCounter!: ScoreCounter;
   private customScale!: CustomScaleManager;
@@ -21,30 +22,10 @@ export class GameWorld extends Scene {
   public create() {
     this.customScale = new CustomScaleManager(this.scale);
 
-    this.platforms = this.physics.add.staticGroup();
+    this.platformManager = new PlatformManager(this);
 
-    const platformDistanceY = this.customScale.safeSize * 0.25;
-
-    const startingPlatforms = Math.ceil(this.scale.height / platformDistanceY);
-
-    for (let i = 0; i < startingPlatforms; i++) {
-      const platformWidth = this.customScale.safeSize * 0.2;
-
-      const x = this.getRandomPlatformX(platformWidth);
-      const y = platformDistanceY * i;
-
-      const platform = new Platform(
-        this,
-        x,
-        y,
-        platformWidth,
-        this.customScale.safeSize / 100,
-      );
-      this.platforms.add(platform, true);
-    }
-
-    const firstPlatform = this.platforms.children.entries[
-      this.platforms.getLength() - 1
+    const firstPlatform = this.platformManager.children.entries[
+      this.platformManager.getLength() - 1
     ].body as Physics.Arcade.Body;
 
     this.player = new Jumper(
@@ -55,7 +36,7 @@ export class GameWorld extends Scene {
         this.customScale.safeSize * 0.1,
     );
 
-    this.physics.add.collider(this.platforms, this.player);
+    this.physics.add.collider(this.platformManager, this.player);
 
     this.cameras.main.startFollow(this.player, false, 0, 1);
     this.player.x = firstPlatform.position.x + firstPlatform.halfWidth;
@@ -75,48 +56,17 @@ export class GameWorld extends Scene {
   }
 
   public update() {
-    this.platforms.children.iterate((child) => {
-      const childBody = child.body as Physics.Arcade.Body;
-      const scrollY = this.cameras.main.scrollY;
+    this.platformManager.updatePlatforms();
 
-      if (childBody.y >= scrollY + this.scale.height) {
-        childBody.reset(this.getRandomPlatformX(childBody.width), scrollY);
-        this.scoreCounter.scoreUp();
-      }
-    });
+    const bottomPlatform = this.platformManager.getBottomMostPlatform();
 
-    const bottomPlatform = this.findBottomMostPlatform();
+    this.scoreCounter.updateScore(this.platformManager.platformsUpdated);
+
     if (
       this.player.y >
       bottomPlatform.body.position.y + this.scale.height / 5
     ) {
       this.scene.start("game-over", { score: this.scoreCounter.score });
     }
-  }
-
-  private findBottomMostPlatform() {
-    const platforms = this.platforms.getChildren();
-    let bottomPlatform = platforms[0];
-
-    for (let i = 1; i < platforms.length; ++i) {
-      const platform = platforms[i];
-
-      if (platform.body.position.y < bottomPlatform.body.position.y) {
-        continue;
-      }
-
-      bottomPlatform = platform;
-    }
-
-    return bottomPlatform;
-  }
-
-  private getRandomPlatformX(platformWidth: number) {
-    return Phaser.Math.Between(
-      this.customScale.extraHalfX + platformWidth / 2,
-      this.customScale.extraHalfX +
-        this.customScale.safeSize -
-        platformWidth / 2,
-    );
   }
 }

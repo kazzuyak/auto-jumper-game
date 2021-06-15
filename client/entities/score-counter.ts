@@ -11,8 +11,8 @@ export class ScoreCounter extends GameObjects.Text {
     super(scene, x, y, `Score: ${score}`, { fontSize: `${fontSize}px` });
   }
 
-  public scoreUp() {
-    this.score++;
+  public updateScore(score: number) {
+    this.score = score;
     this.text = `Score: ${this.score}`;
   }
 }
